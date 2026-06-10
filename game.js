@@ -12,34 +12,66 @@ let lastSpawnTime = 0;
 let spawnInterval = 1000;
 let animationId;
 
+async function loadSVG(svgFileName = '') {
+    const response = await fetch(`./svg/${svgFileName}.svg`);
+    return await response.text();
+}
+
+const itemTypes = []
 // Cute SVG icons as data URLs
-const icons = {
-    heart: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ff6b9d" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>')}`,
-    star: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffd700" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>')}`,
-    flower: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ff69b4" d="M12 2C9.5 2 7.5 4 7.5 6.5S9.5 11 12 11 16.5 9 16.5 6.5 14.5 2 12 2zm0 9c-2.5 0-4.5 2-4.5 4.5S9.5 20 12 20s4.5-2 4.5-4.5S14.5 11 12 11z"/></svg>')}`,
-    special: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ff1493" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>')}`
+const generateIcons = async () => {
+    const lilo =  await loadSVG('lilosvg')
+    const ze =  await loadSVG('zesvg')
+    const usVapor =  await loadSVG('us-vapor')
+    const joyTrip =  await loadSVG('joy-trip')
+    const joyPhoto =  await loadSVG('joy-phototime')
+
+    return {
+        heart: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ff6b9d" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>')}`,
+        lilo: `data:image/svg+xml,${encodeURIComponent(lilo)}`,
+        ze: `data:image/svg+xml,${encodeURIComponent(ze)}`,
+        joyPhoto: `data:image/svg+xml,${encodeURIComponent(joyPhoto)}`,
+        joyTrip: `data:image/svg+xml,${encodeURIComponent(joyTrip)}`,
+        special: `data:image/svg+xml,${encodeURIComponent(usVapor)}`
+    }
 };
 
-const itemTypes = [
-    { type: 'heart', icon: icons.heart, points: 1, weight: 0.6 },
-    { type: 'star', icon: icons.star, points: 2, weight: 0.25 },
-    { type: 'flower', icon: icons.flower, points: 3, weight: 0.12 },
-    { type: 'special', icon: icons.special, points: 5, weight: 0.03 }
-];
-
 const milestoneMessages = [
-    { score: 5, message: "You're doing great! 💕" },
-    { score: 10, message: "Amazing! Keep going! ⭐" },
-    { score: 20, message: "You're a heart catcher! 🌸" },
-    { score: 30, message: "Incredible! 💖" },
-    { score: 50, message: "You're the best! 🏆" }
+    { score: 5, message: "Vai la, mosi! 💕" },
+    { score: 15, message: "Foco amorzinho ⭐" },
+    { score: 30, message: "Me pega assim também! 🌸" },
+    { score: 100, message: "Impressionante 💖" },
+    { score: 150, message: "A melhor jogadora! 🏆" }
 ];
 
 const specialMessages = [
-    "Special catch! ✨",
-    "Wow! 💫",
-    "Amazing! 🎉",
-    "Perfect! 💝"
+    "🐢🐛",
+    "Cucuritos ❤️",
+    "Te amo 🐢🐛❤️"
+];
+
+const liloMessages = [
+    "Fiuuuu",
+    "Lilinho",
+    "Lilo iuuu"
+];
+
+const zeMessages = [
+    "Zéco 🐕",
+    "Au au au 🐕",
+    "🐶"
+];
+
+const joyPhotoMessages = [
+    "Modo fotografa 📸",
+    "Posa pra mim! 📸",
+    "Girl power!"
+];
+
+const joyTripMessages = [
+    "Modo viagem 🚗",
+    "Work, work, work...",
+    "🛫"
 ];
 
 let shownMilestones = new Set();
@@ -141,12 +173,36 @@ function handleClick(e) {
             // Caught the item
             score += item.points;
             scoreDisplay.textContent = score;
+
+            switch (item.type) {
+                case 'special':
+                    const randomMessage = specialMessages[Math.floor(Math.random() * specialMessages.length)];
+                    showFloatingMessage(item.x, item.y, randomMessage);
+                    break;
+
+                case 'lilo':
+                    const randomLiloMessage = liloMessages[Math.floor(Math.random() * liloMessages.length)];
+                    showFloatingMessage(item.x, item.y, randomLiloMessage);
+                    break;
+
+                case 'ze':
+                    const randomZeMessage = zeMessages[Math.floor(Math.random() * zeMessages.length)];
+                    showFloatingMessage(item.x, item.y, randomZeMessage);
+                    break;
+                    
+                case 'joyPhoto':
+                    const randomJoyPhotoMessage = joyPhotoMessages[Math.floor(Math.random() * joyPhotoMessages.length)];
+                    showFloatingMessage(item.x, item.y, randomJoyPhotoMessage);
+                    break;
+                    
+                case 'joyTrip':
+                    const randomJoyTripMessage = joyTripMessages[Math.floor(Math.random() * joyTripMessages.length)];
+                    showFloatingMessage(item.x, item.y, randomJoyTripMessage);
+                    break;
             
-            if (item.type === 'special') {
-                const randomMessage = specialMessages[Math.floor(Math.random() * specialMessages.length)];
-                showFloatingMessage(item.x, item.y, randomMessage);
-            } else {
-                showFloatingMessage(item.x, item.y, '+' + item.points);
+                default:
+                    showFloatingMessage(item.x, item.y, '+' + item.points);
+                    break;
             }
             
             items.splice(i, 1);
@@ -198,9 +254,20 @@ function startGame() {
     lastSpawnTime = 0;
     gameRunning = true;
     startScreen.style.display = 'none';
+
+    generateIcons().then(svgIcons => {
+        itemTypes.push(
+            { type: 'heart', icon: svgIcons.heart, points: 1, weight: 0.3 },
+            { type: 'lilo', icon: svgIcons.lilo, points: 3, weight: 0.2 },
+            { type: 'ze', icon: svgIcons.ze, points: 3, weight: 0.2 },
+            { type: 'joyPhoto', icon: svgIcons.joyPhoto, points: 10, weight: 0.15 },
+            { type: 'joyTrip', icon: svgIcons.joyTrip, points: 15, weight: 0.25 },
+            { type: 'special', icon: svgIcons.special, points: 20, weight: 0.1 }
+        )
+        resizeCanvas();
+        animationId = requestAnimationFrame(update);
+    })
     
-    resizeCanvas();
-    animationId = requestAnimationFrame(update);
 }
 
 // Event listeners
