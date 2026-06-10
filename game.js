@@ -194,7 +194,7 @@ function handleClick(e) {
                     const randomJoyPhotoMessage = joyPhotoMessages[Math.floor(Math.random() * joyPhotoMessages.length)];
                     showFloatingMessage(item.x, item.y, randomJoyPhotoMessage);
                     break;
-                    
+
                 case 'joyTrip':
                     const randomJoyTripMessage = joyTripMessages[Math.floor(Math.random() * joyTripMessages.length)];
                     showFloatingMessage(item.x, item.y, randomJoyTripMessage);
@@ -207,6 +207,11 @@ function handleClick(e) {
             
             items.splice(i, 1);
             checkMilestones();
+
+
+            if (score >= 300) {
+                endGame();
+            }
             break;
         }
     }
@@ -268,6 +273,17 @@ function startGame() {
         animationId = requestAnimationFrame(update);
     })
     
+}
+
+function endGame() {
+    // 1. Stop the game loop/animation
+    cancelAnimationFrame(animationId); 
+    
+    // 2. Hide the canvas
+    document.getElementById('gameCanvas').style.display = 'none';
+    
+    // 3. Show the win screen
+    document.getElementById('winScreen').style.display = 'flex';
 }
 
 // Event listeners
