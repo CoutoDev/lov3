@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Catch the Hearts 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div>
+                <span class="score-label">Score:</span>
+                <span class="score" id="score">0</span>
+            </div>
+            <div class="title">💕 Catch the Hearts 💕</div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="start-screen" id="startScreen">
+            <h1>💕 Catch the Hearts 💕</h1>
+            <p>Tap the falling hearts to catch them!</p>
+            <button class="start-btn" id="startBtn">Start Game</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
