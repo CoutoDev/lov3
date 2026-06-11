@@ -260,6 +260,9 @@ function startGame() {
     gameRunning = true;
     startScreen.style.display = 'none';
 
+    const bgAudio = document.getElementById('bgAudio');
+    bgAudio.play();
+
     generateIcons().then(svgIcons => {
         itemTypes.push(
             { type: 'heart', icon: svgIcons.heart, points: 1, weight: 0.23 },
