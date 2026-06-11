@@ -9,6 +9,8 @@
 </head>
 <body>
     <div class="game-container">
+        <audio src="audio/espera.wav" loading="eager" loop autoplay></audio>
+
         <div class="header">
             <div>
                 <span class="score-label">Score:</span>
@@ -28,7 +30,15 @@
         <div class="start-screen" id="winScreen" style="display: none;">
             <h1>Parabéns, meu amor 🎉💕</h1>
             <p>Você chegou em 300 pontos🌟</p>
-            <p>Isso só prova o quanto você é incrível! Te amo 🐛🐢❤️</p>
+            <p>Te amo 🐛🐢❤️</p>
+            <button class="start-btn" onclick="document.getElementById('winScreen').style.display = 'none'; document.getElementById('loveScreen').style.display = 'flex';">Ver recompensa</button>
+        </div>
+
+        <div class="start-screen" id="loveScreen" style="display: none;">
+            <picture>
+                <img src="images/colagem.jpg" alt="Us" width="300">
+            </picture>
+            <p>Te amo 🐛🐢❤️</p>
             <button class="start-btn" onclick="location.reload()">Jogar novamente</button>
         </div>
     </div>
